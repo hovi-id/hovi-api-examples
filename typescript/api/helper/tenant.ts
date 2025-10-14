@@ -1,7 +1,5 @@
 import config from "../Config/config";
 import { CreateTenantRequest } from "../types";
-import logger from "../utils/logger";
-
 /**
  * Creates a new tenant using the provided payload or default values.
  *
@@ -39,7 +37,7 @@ export async function createTenant(payload?: CreateTenantRequest) {
     }
 
     const data = await response.json();
-    // logger.info("Tenant created successfully", data);
+    console.dir(data, { depth: "infinity" });
     return data;
   } catch (error: any) {
     console.error("Error creating tenant:", error.message);

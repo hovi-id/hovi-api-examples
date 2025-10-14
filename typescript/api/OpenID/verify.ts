@@ -19,7 +19,8 @@ import config from "../Config/config";
  */
 export const sendProofRequest = async (
   tenantId: string,
-  verificationTemplateId: string
+  verificationTemplateId: string,
+  connectionId?: string
 ) => {
   const endpoint = `${config.base_url}/verification/send-proof-request`;
   const payload = {

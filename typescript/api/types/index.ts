@@ -21,73 +21,62 @@ export interface Did {
   seed: string;
 }
 
-export type Ecosystem = "open-id" | "cheqd" | "privado-id" | "indicio";
+// export type Ecosystem = "open-id" | "cheqd" | "privado-id" | "indicio";
 export type TCredentialFormat = "mdoc" | "sd-jwt" | "jsonld" | "anoncred";
 
-/** Minimal “required” payload for each format & ecosystem */
-export type RequiredPayloadMap = {
-  [E in Ecosystem]: {
-    [F in TCredentialFormat]?: object; // define the minimal shape
-  };
+export type Attribute = {
+  name: string;
+  label: string;
+  type: string;
+  description: string;
+  required: boolean;
+  disclosurable?: boolean;
 };
 
-/** Strongly typed minimal payloads */
-/**
- * Represents the minimal payload structure for a base entity.
- *
- * @property name - The name of the entity.
- * @property version - The version of the entity.
- * @property description - A brief description of the entity.
- * @property attributes - An array of attribute definitions for the entity.
- * @property attributes[].name - The name of the attribute.
- * @property attributes[].label - The display label for the attribute.
- * @property attributes[].type - The data type of the attribute.
- * @property attributes[].description - A description of the attribute.
- * @property attributes[].required - Indicates if the attribute is required.
- * @property attributes[].disclosurable - (Optional) Indicates if the attribute is disclosurable, required by some formats.
- */
-export interface TBaseMinimalPayload {
+export type JsonLdPayload = {
   name: string;
   version: string;
   description: string;
-  attributes: {
-    name: string;
-    label: string;
-    type: string;
-    description: string;
-    required: boolean;
-    disclosurable?: boolean; // only if required by some formats
-  }[];
-}
-export interface JsonLdMinimal extends TBaseMinimalPayload {
+  attributes: Attribute[];
   schemaType: string;
-}
-export interface SdJwtMinimal extends TBaseMinimalPayload {
+  categoryId?: string;
+  privadoCredentialType?: string;
+};
+
+export type SdJwtPayload = {
+  name: string;
+  version: string;
+  description: string;
+  attributes: Attribute[];
   schemaType: string;
-}
-export interface AnoncredMinimal extends TBaseMinimalPayload {
-  tag: string;
-}
-export interface MdocMinimal extends TBaseMinimalPayload {
+};
+
+export type MdocPayload = {
+  name: string;
+  version: string;
+  description: string;
+  attributes: Attribute[];
   docType: string;
-}
+};
 
-/** Union of all minimal payloads */
-export type TCredentialTemplatePayload =
-  | JsonLdMinimal
-  | SdJwtMinimal
-  | AnoncredMinimal
-  | MdocMinimal;
+export type AnonCredPayload = {
+  name: string;
+  version: string;
+  description: string;
+  attributes: Attribute[];
+  tag: string;
+};
 
-// export interface TCreateCredentialTemplateResponse {
-//   success: boolean;
-//   message?: string;
-//   data?: any;
-// }
+export type CredentialFormatMap = {
+  jsonld: JsonLdPayload;
+  "sd-jwt": SdJwtPayload;
+  mdoc: MdocPayload;
+  anoncred: AnonCredPayload;
+};
 
 export type TCredentialTemplateOfferPayload = {
   credentialTemplateId: string;
-  credentialValues?: object;
+  credentialValues?: { [key: string]: any };
   connectionId?: string;
   holderDid?: string;
 };

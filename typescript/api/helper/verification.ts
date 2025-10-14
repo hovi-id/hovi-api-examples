@@ -28,7 +28,6 @@ export const createVerificationTemplate = async (
     };
   }
   payload = { ...defaultPayload, ...payload };
-  console.log({ endpoint, payload });
   try {
     const response = await fetch(endpoint, {
       method: "POST",
@@ -44,7 +43,6 @@ export const createVerificationTemplate = async (
     }
 
     const data = await response.json();
-    console.log("response", data);
     return data;
   } catch (error: any) {
     console.error(

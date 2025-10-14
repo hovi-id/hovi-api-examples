@@ -1,12 +1,13 @@
+import chalk from "chalk";
 import config from "../Config/config";
 import { TCredentialFormat, TCredentialTemplateOfferPayload } from "../types";
 import logger from "../utils/logger";
-
+import qrcode from "qrcode-terminal";
 /**
  * Creates a credential offer for a specified tenant.
  *
  * @param tenantId - The unique identifier of the tenant.
- * @param payload - (Optional) The payload containing credential values and other offer details. 
+ * @param payload - (Optional) The payload containing credential values and other offer details.
  * @param format - (Optional) The credential format (e.g., "jsonld"). Defaults to "jsonld" if not provided.
  * @returns A promise that resolves to the response data from the credential offer creation API.
  *
@@ -26,11 +27,16 @@ export async function createCredentialOffer(
   let defaultPayload = {};
   if (!payload || !payload.credentialValues) {
     defaultPayload = {
-      credentialValues: { firstName: "Hovi Joe" },
+      credentialValues: { fullName: "Hovi Joe", employeeId: "12345" },
     };
   }
+  const ecosystemName = config.api_key?.split("-")[0];
+  if (
+    payload?.holderDid &&
+    (ecosystemName === "openId" || ecosystemName === "privado-id")
+  ) {
+  }
   const finalPayload = { ...defaultPayload, ...payload };
-  console.log({ endpoint, finalPayload });
   try {
     const response = await fetch(endpoint, {
       method: "POST",
@@ -47,7 +53,13 @@ export async function createCredentialOffer(
     }
 
     const data = await response.json();
-    logger.info(`${format} Credential offer created successfully`, data);
+    console.log(
+      chalk.bold.green("\n✅ Credential Offer Created Successfully!")
+    );
+    // console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));
+    // qrcode.generate(data.response.credentialOfferUri, { small: true });
+
+    console.log(chalk.gray("\n-------------------------------------------\n"));
     return data;
   } catch (error: any) {
     console.error(`Error creating ${format} credential offer:`, error.message);
