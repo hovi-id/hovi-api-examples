@@ -2,7 +2,7 @@
   "name": "hovi-api-examples",
   "version": "1.0.0",
   "description": "API-based tutorials and examples for Hovi ecosystems built with TypeScript.",
-  "main": "index.ts ",
+  "main": "index.ts",
   "scripts": {
     "start": "ts-node index.ts",
     "build": "tsc"
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Fahmudul/hovi-sdk-examples#readme",
   "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
     "@types/chalk": "^0.4.31",
     "@types/node": "^24.7.1",
     "@types/qrcode-terminal": "^0.12.2",
