@@ -2,6 +2,21 @@ import config from "../Config/config";
 import { TCredentialFormat, TCredentialTemplateOfferPayload } from "../types";
 import logger from "../utils/logger";
 
+/**
+ * Creates a credential offer for a specified tenant.
+ *
+ * @param tenantId - The unique identifier of the tenant.
+ * @param payload - (Optional) The payload containing credential values and other offer details. 
+ * @param format - (Optional) The credential format (e.g., "jsonld"). Defaults to "jsonld" if not provided.
+ * @returns A promise that resolves to the response data from the credential offer creation API.
+ *
+ * @remarks
+ * - If `payload` or `payload.credentialValues` is not provided, a default payload with a sample `firstName` is used.
+ * - Logs the endpoint and payload for debugging.
+ * - Throws an error if the API response is not successful.
+ * - Logs the successful creation of the credential offer.
+ * - Returns an error object if the operation fails.
+ */
 export async function createCredentialOffer(
   tenantId: string,
   payload?: TCredentialTemplateOfferPayload,

@@ -4,21 +4,35 @@ import { createVerificationTemplate } from "./helper/verification";
 import { createCredentialOffer } from "./OpenID/issue";
 import { sendProofRequest } from "./OpenID/verify";
 
+/**
+ * Main entry point for the Hovi API example code.
+ *
+ * This function demonstrates the sequence of API calls required to
+ * create a tenant, create a credential template, create a credential
+ * offer, create a verification template, and send a proof request.
+ *
+ */
 async function main() {
-  const tenantRespnse = await createTenant();
+  // Step 1: Create a new tenant
+  const tenantResponse = await createTenant();
+
+  // Step 2: Create a new credential template
   const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantRespnse.response.tenantId
+    tenantResponse.response.tenantId
   );
+
+  // Step 3: Create a new credential offer
   const offerCredential = await createCredentialOffer(
-    tenantRespnse.response.tenantId,
+    tenantResponse.response.tenantId,
     {
       credentialTemplateId:
         createCredentialTemplateResponse.response.credentialTemplateId,
     }
   );
 
+  // Step 4: Create a new verification template
   const creatteVerificationTemplateResponse = await createVerificationTemplate(
-    tenantRespnse.response.tenantId,
+    tenantResponse.response.tenantId,
     {
       restriction: {
         credentialTemplateId:
@@ -26,9 +40,10 @@ async function main() {
       },
     }
   );
+
+  // Step 5: Send a proof request
   const sentProofRequest = await sendProofRequest(
-    tenantRespnse.response.tenantId,
+    tenantResponse.response.tenantId,
     creatteVerificationTemplateResponse.response.verificationTemplateId
   );
 }
-main();
