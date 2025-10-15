@@ -7,6 +7,19 @@ import {
 } from "./utils/templates";
 import { createTenant } from "./utils/tenant";
 
+/**
+ * Executes the OpenID workflow, which includes the following steps:
+ * 1. Creates a new tenant with specified details.
+ * 2. Creates a new credential template for the tenant.
+ * 3. Issues a credential offer based on the created template.
+ * 4. Creates a verification template with restrictions based on the credential template.
+ * 5. Sends a proof request using the verification template.
+ *
+ * This function demonstrates the end-to-end process of tenant creation, credential issuance,
+ * and verification using the OpenID API.
+ *
+ * @returns {Promise<void>} A promise that resolves when the workflow is complete.
+ */
 export async function openIdWorkFlow() {
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({

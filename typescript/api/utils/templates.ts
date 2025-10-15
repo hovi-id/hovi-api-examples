@@ -3,6 +3,19 @@ import { config } from "..";
 import { TCredentialFormat, CredentialFormatMap } from "../types";
 import { faker } from "@faker-js/faker";
 
+/**
+ * Creates a credential template for a specified tenant and credential format.
+ *
+ * @param tenantId - The unique identifier of the tenant.
+ * @param payload - The payload containing the template data to be created.
+ * @param format - (Optional) The credential format (e.g., "jsonld"). Defaults to "jsonld" if not provided.
+ * @returns A promise that resolves to the created credential template data, or an error object if creation fails.
+ *
+ * @example
+ * ```typescript
+ * const template = await createCredentialTemplate("tenant123", { name: "My Template" }, "jsonld");
+ * ```
+ */
 export async function createCredentialTemplate(
   tenantId: string,
   payload: any,
@@ -40,6 +53,17 @@ export async function createCredentialTemplate(
   }
 }
 
+/**
+ * Creates a verification template for a given tenant.
+ *
+ * Sends a POST request to the verification template endpoint with the provided payload.
+ * The format of the template can be specified (defaults to "jsonld" if not provided).
+ *
+ * @param tenantId - The unique identifier of the tenant.
+ * @param payload - The data to be used for creating the verification template.
+ * @param format - (Optional) The format of the verification template (e.g., "jsonld").
+ * @returns A promise that resolves to the created verification template data, or an error object if the request fails.
+ */
 export const createVerificationTemplate = async (
   tenantId: string,
   payload: any,

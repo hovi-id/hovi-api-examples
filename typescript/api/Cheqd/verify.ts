@@ -1,5 +1,24 @@
 import { config } from "..";
 
+/**
+ * Sends a proof request to the verification API endpoint.
+ *
+ * @param tenantId - The unique identifier for the tenant making the request.
+ * @param verificationTemplateId - The ID of the verification template to use for the proof request.
+ * @param connectionId - (Optional) The ID of the connection to which the proof request should be sent.
+ * @returns A promise that resolves to an object indicating success and containing the response data if successful,
+ *          or an error message if the request fails.
+ *
+ * @example
+ * ```typescript
+ * const result = await sendProofRequest('tenant123', 'template456', 'connection789');
+ * if (result.success) {
+ *   // handle success
+ * } else {
+ *   // handle error
+ * }
+ * ```
+ */
 export const sendProofRequest = async (
   tenantId: string,
   verificationTemplateId: string,

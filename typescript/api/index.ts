@@ -7,13 +7,13 @@ export const config = {
   base_url: process.env.BASE_URL,
   api_key: process.env.API_KEY,
 };
+
 /**
- * Main entry point for the Hovi API example code.
+ * The main entry point for executing authentication workflows.
  *
- * This function demonstrates the sequence of API calls required to
- * create a tenant, create a credential template, create a credential
- * offer, create a verification template, and send a proof request.
+ * This function sequentially runs the OpenId workflow and, optionally, the Cheqd workflow.
  *
+ * @returns {Promise<void>} A promise that resolves when all workflows have completed.
  */
 async function main() {
   // OpenId Work Flow

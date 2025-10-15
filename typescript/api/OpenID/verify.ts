@@ -1,5 +1,14 @@
 import { config } from "..";
 
+/**
+ * Sends a proof request to the verification API endpoint.
+ *
+ * @param tenantId - The tenant identifier used for authentication.
+ * @param verificationTemplateId - The ID of the verification template to use for the proof request.
+ * @param connectionId - (Optional) The connection ID to associate with the proof request.
+ * @returns An object containing the success status and response data or error message.
+ *
+ */
 export const sendProofRequest = async (
   tenantId: string,
   verificationTemplateId: string,

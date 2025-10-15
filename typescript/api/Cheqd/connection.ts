@@ -2,6 +2,17 @@ import qrcode from "qrcode-terminal";
 import chalk from "chalk";
 import { config } from "..";
 
+/**
+ * Creates a new connection for the specified tenant and displays a QR code for invitation.
+ *
+ * This function sends a POST request to the connection creation endpoint, generates a QR code
+ * for the invitation, and waits for the connection to be established. If successful, it returns
+ * the connection status. If an error occurs, it logs the error and returns an object indicating failure.
+ *
+ * @param tenantId - The unique identifier of the tenant for whom the connection is being created.
+ * @param label - (Optional) A custom label for the connection. Defaults to "Hovi Connection" if not provided.
+ * @returns The established connection status object on success, or an error object on failure.
+ */
 export async function createConnection(tenantId: string, label?: string) {
   const endpoint = `${config.base_url}/connection/create`;
 
@@ -40,6 +51,20 @@ export async function createConnection(tenantId: string, label?: string) {
   }
 }
 
+/**
+ * Periodically checks the status of a connection by polling the API endpoint at a fixed interval.
+ *
+ * @param tenantId - The tenant identifier used for the API request header.
+ * @param invitationId - The invitation identifier to check the connection status for.
+ * @returns A promise that resolves with the connection data when the connection state is "completed",
+ *          or rejects if the polling times out or an error occurs.
+ *
+ * @remarks
+ * - Polls the endpoint every 5 seconds, up to a maximum of 24 times (2 minutes).
+ * - If the connection state becomes "completed", the promise resolves with the response data.
+ * - If the maximum number of polls is reached without completion, the promise rejects with a timeout error.
+ * - Any HTTP or network errors will also cause the promise to reject.
+ */
 export const checkConnectionStatus = async (
   tenantId: string,
   invitationId: string

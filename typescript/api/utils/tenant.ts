@@ -1,6 +1,16 @@
 import chalk from "chalk";
 import { config } from "..";
 import { CreateTenantRequest } from "../types";
+/**
+ * Creates a new tenant by sending a POST request to the configured API endpoint.
+ *
+ * @param payload - The tenant creation request payload conforming to `CreateTenantRequest`.
+ * @returns A promise that resolves to the response data from the API. If an error occurs,
+ *          returns an object with `success: false` and an error `message`.
+ *
+ * @throws Will throw an error if `config.base_url` or `config.api_key` is not set,
+ *         or if the HTTP response is not OK.
+ */
 export async function createTenant(payload: CreateTenantRequest) {
   try {
     const endpoint = `${config.base_url}/tenant/create`;

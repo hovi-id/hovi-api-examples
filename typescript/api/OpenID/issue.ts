@@ -4,6 +4,17 @@ import logger from "../utils/logger";
 import qrcode from "qrcode-terminal";
 import { config } from "..";
 
+/**
+ * Creates a credential offer for a given tenant by sending a POST request to the credential offer endpoint.
+ *
+ * @param tenantId - The unique identifier of the tenant for whom the credential offer is being created.
+ * @param payload - The payload containing the credential offer details to be sent in the request body.
+ * @returns A promise that resolves to the response data if the offer is created successfully, or an error object if the operation fails.
+ *
+ * @remarks
+ * - Logs success and displays a QR code for the credential offer URI upon successful creation.
+ * - Handles and logs errors, returning a standardized error object on failure.
+ */
 export async function createCredentialOffer(tenantId: string, payload: any) {
   const endpoint = `${config.base_url}/credential/sd-jwt/offer`;
 

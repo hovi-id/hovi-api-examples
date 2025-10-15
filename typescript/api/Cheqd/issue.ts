@@ -4,6 +4,18 @@ import logger from "../utils/logger";
 import qrcode from "qrcode-terminal";
 import { config } from "..";
 
+/**
+ * Creates a credential offer by sending a POST request to the specified endpoint.
+ *
+ * @param tenantId - The unique identifier for the tenant, used for authentication.
+ * @param payload - The payload containing the credential offer details to be sent in the request body.
+ * @returns A promise that resolves to the response data from the API if successful, or an error object if the request fails.
+ *
+ * @example
+ * ```typescript
+ * const offer = await createCredentialOffer('tenant123', { credentialData: { ... } });
+ * ```
+ */
 export async function createCredentialOffer(tenantId: string, payload: any) {
   const endpoint = `${config.base_url}/credential/anoncred/offer`;
   console.log("payload", payload);
