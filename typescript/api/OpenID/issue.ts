@@ -6,16 +6,10 @@ import { config } from "..";
 
 export async function createCredentialOffer(
   tenantId: string,
-  payload?: TCredentialTemplateOfferPayload
+  payload: TCredentialTemplateOfferPayload
 ) {
   const endpoint = `${config.base_url}/credential/${"sd-jwt"}/offer`;
-  let defaultPayload = {};
-  if (!payload || !payload.credentialValues) {
-    defaultPayload = {
-      credentialValues: { fullName: "Hovi Joe", employeeId: "12345" },
-    };
-  }
-  const finalPayload = { ...defaultPayload, ...payload };
+
   try {
     const response = await fetch(endpoint, {
       method: "POST",
@@ -24,7 +18,7 @@ export async function createCredentialOffer(
         "Content-Type": "application/json",
         Authorization: `Bearer ${config.api_key}`,
       },
-      body: JSON.stringify(finalPayload),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -35,8 +29,8 @@ export async function createCredentialOffer(
     console.log(
       chalk.bold.green("\n✅ Credential Offer Created Successfully!")
     );
-    // console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));
-    // qrcode.generate(data.response.credentialOfferUri, { small: true });
+    console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));
+    qrcode.generate(data.response.credentialOfferUri, { small: true });
 
     console.log(chalk.gray("\n-------------------------------------------\n"));
     return data;
