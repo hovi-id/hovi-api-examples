@@ -17,7 +17,7 @@ export const config = {
  */
 async function main() {
   // OpenId Work Flow
-  const openId = await openIdWorkFlow();
+  const openId = await openIdWorkFlow(); // sdfsdf
 
   // Cheqd Work Flow
   // const cheqd = await cheqdWorkFlow();
