@@ -4,11 +4,8 @@ import logger from "../utils/logger";
 import qrcode from "qrcode-terminal";
 import { config } from "..";
 
-export async function createCredentialOffer(
-  tenantId: string,
-  payload: TCredentialTemplateOfferPayload
-) {
-  const endpoint = `${config.base_url}/credential/${"sd-jwt"}/offer`;
+export async function createCredentialOffer(tenantId: string, payload: any) {
+  const endpoint = `${config.base_url}/credential/sd-jwt/offer`;
 
   try {
     const response = await fetch(endpoint, {

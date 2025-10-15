@@ -8,7 +8,7 @@ export const sendProofRequest = async (
   const endpoint = `${config.base_url}/verification/send-proof-request`;
   const payload = {
     verificationTemplateId: verificationTemplateId,
-    // connectionId: "sample-connection-id", // Replace with actual connection ID
+    connectionId,
   };
   console.log({ endpoint, payload });
   try {

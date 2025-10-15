@@ -27,6 +27,7 @@ export const sendProofRequest = async (
     }
 
     const data = await response.json();
+    console.log("Proof request sent successfully:", data);
     return { success: true, data };
   } catch (error: any) {
     console.error(`Error sending proof request:`, error.message);
