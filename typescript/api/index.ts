@@ -1,5 +1,10 @@
-import { cheqdWorkFlow } from "./cheqd";
-import { openIdWorkFlow } from "./openid";
+import { cheqdAnoncredWorkFlow, cheqdJsonLdWorkFlow } from "./cheqd";
+import { indicioAnoncredWorkFlow, indicioJsonLdWorkFlow } from "./indicio";
+import {
+  openIdJsonLdWorkFlow,
+  openIdSdJwtWorkFlow,
+  openIDmDocWorkFlow,
+} from "./openid";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -17,10 +22,16 @@ export const config = {
  */
 async function main() {
   // OpenId Work Flow
-  const openId = await openIdWorkFlow(); // sdfsdf
+  // const openId = await openIdJsonLdWorkFlow();
+  // const openId = await openIdSdJwtWorkFlow();
+  // const openId = await openIDmDocWorkFlow();
 
+  // Indicio Work flow
+  // const indicio = await indicioJsonLdWorkFlow();
+  const indicio = await indicioAnoncredWorkFlow();
   // Cheqd Work Flow
-  // const cheqd = await cheqdWorkFlow();
+  // const cheqd = await cheqdAnoncredWorkFlow();
+  // const cheqd = await cheqdJsonLdWorkFlow();
 }
 
 main();

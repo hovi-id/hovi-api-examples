@@ -15,8 +15,12 @@ import { config } from "..";
  * - Logs success and displays a QR code for the credential offer URI upon successful creation.
  * - Handles and logs errors, returning a standardized error object on failure.
  */
-export async function createCredentialOffer(tenantId: string, payload: any) {
-  const endpoint = `${config.base_url}/credential/sd-jwt/offer`;
+export async function createCredentialOffer(
+  tenantId: string,
+  payload: any,
+  format: TCredentialFormat
+) {
+  const endpoint = `${config.base_url}/credential/${format}/offer`;
 
   try {
     const response = await fetch(endpoint, {
@@ -35,7 +39,9 @@ export async function createCredentialOffer(tenantId: string, payload: any) {
 
     const data = await response.json();
     console.log(
-      chalk.bold.green("\n✅ Credential Offer Created Successfully!")
+      chalk.bold.green(
+        `\n✅ Credential Offer for ${format} Created Successfully!`
+      )
     );
     console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));
     qrcode.generate(data.response.credentialOfferUri, { small: true });

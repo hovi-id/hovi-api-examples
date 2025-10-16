@@ -19,13 +19,11 @@ import { faker } from "@faker-js/faker";
 export async function createCredentialTemplate(
   tenantId: string,
   payload: any,
-  format?: TCredentialFormat
+  format: TCredentialFormat
 ) {
   // Validate payload based on format
 
-  const endpoint = `${config.base_url}/credential-template/${
-    format || "jsonld"
-  }/create`;
+  const endpoint = `${config.base_url}/credential-template/${format}/create`;
   // console.log("Payload:", payload);
   try {
     const resp = await fetch(endpoint, {
@@ -42,13 +40,10 @@ export async function createCredentialTemplate(
       throw new Error(`HTTP error: ${resp.status}`);
     }
     const data = await resp.json();
-    console.log("✅ Credential template created successfully:", data);
+    console.log("✅ Credential template created successfully:");
     return data;
   } catch (err: any) {
-    console.error(
-      `Error creating credential template ${format}):`,
-      err.message
-    );
+    console.error(`Error creating credential template ${format}`, err.message);
     return { success: false, message: err.message };
   }
 }
@@ -67,12 +62,10 @@ export async function createCredentialTemplate(
 export const createVerificationTemplate = async (
   tenantId: string,
   payload: any,
-  format?: string
+  format: TCredentialFormat
 ) => {
-  const endpoint = `${config.base_url}/verification-template/${
-    format || "jsonld"
-  }/create`;
-
+  const endpoint = `${config.base_url}/verification-template/${format}/create`;
+  console.log("Payload:", payload);
   try {
     const response = await fetch(endpoint, {
       method: "POST",

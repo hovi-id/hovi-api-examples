@@ -41,7 +41,7 @@ export async function createCredentialOffer(
     const data = await response.json();
     console.log(
       chalk.bold.green(
-        `\n✅An ${format}Credential Offer Sent To Your Wallet Successfully!`
+        `\n📱 An ${format} Credential Offer Sent To Your Wallet Successfully!`
       )
     );
     // console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));

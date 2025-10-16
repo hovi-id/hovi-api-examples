@@ -1,5 +1,5 @@
 import { config } from "..";
-
+import qrcode from "qrcode-terminal";
 /**
  * Sends a proof request to the verification API endpoint.
  *
@@ -36,7 +36,8 @@ export const sendProofRequest = async (
     }
 
     const data = await response.json();
-    console.log("Proof request sent successfully:", data);
+    console.log("Accept this QR code to verify:");
+    qrcode.generate(data.response.authorizationRequestUri, { small: true });
     return { success: true, data };
   } catch (error: any) {
     console.error(`Error sending proof request:`, error.message);

@@ -13,10 +13,10 @@ import { config } from "..";
  * @param label - (Optional) A custom label for the connection. Defaults to "Hovi Connection" if not provided.
  * @returns The established connection status object on success, or an error object on failure.
  */
-export async function createConnection(tenantId: string, label?: string) {
+export async function createConnection(tenantId: string, label: string) {
   const endpoint = `${config.base_url}/connection/create`;
 
-  const payload = { label: label || "Hovi Connection" };
+  const payload = { label: label || "Your Connection label" };
 
   try {
     const response = await fetch(endpoint, {

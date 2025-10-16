@@ -1,11 +1,11 @@
-import { createConnection } from "./cheqd/connection";
+import { createConnection } from "./indicio/connection";
 import {
   createCredentialTemplate,
   createVerificationTemplate,
 } from "./utils/templates";
 import { createTenant } from "./utils/tenant";
-import { createCredentialOffer } from "./cheqd/issue";
-import { sendProofRequest } from "./cheqd/verify";
+import { createCredentialOffer } from "./indicio/issue";
+import { sendProofRequest } from "./indicio/verify";
 import {
   anoncredCredentialTemplate,
   anoncredVerificationTemplate,
@@ -14,7 +14,7 @@ import {
 } from "./faker";
 
 /**
- * Executes a workflow for interacting with the cheqd API, including tenant creation,
+ * Executes a workflow for interacting with the indicio API, including tenant creation,
  * credential template creation, connection establishment, credential offering, verification
  * template creation, and proof request sending.
  *
@@ -29,9 +29,9 @@ import {
  * @returns {Promise<void>} A promise that resolves when the workflow is complete.
  *
  * @example
- * await cheqdWorkFlow();
+ * await indicioWorkFlow();
  */
-export async function cheqdJsonLdWorkFlow() {
+export async function indicioJsonLdWorkFlow() {
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
     tenantName: "YourTenantName", // Replace with your tenant's name
@@ -48,7 +48,8 @@ export async function cheqdJsonLdWorkFlow() {
 
   // Step 3: Create a new connection
   const connectionResponse = await createConnection(
-    tenantResponse.response.tenantId
+    tenantResponse.response.tenantId,
+    "Your Connection Name"
   );
 
   // Step 4: Create a new credential offer
@@ -86,7 +87,7 @@ export async function cheqdJsonLdWorkFlow() {
     connectionResponse.connectionId
   );
 }
-export async function cheqdAnoncredWorkFlow() {
+export async function indicioAnoncredWorkFlow() {
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
     tenantName: "YourTenantName", // Replace with your tenant's name
@@ -103,7 +104,8 @@ export async function cheqdAnoncredWorkFlow() {
 
   // Step 3: Create a new connection
   const connectionResponse = await createConnection(
-    tenantResponse.response.tenantId
+    tenantResponse.response.tenantId,
+    "Your Connection Name"
   );
 
   // Step 4: Create a new credential offer
