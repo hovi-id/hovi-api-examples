@@ -102,7 +102,7 @@ export const jsonLdCredentialTemplate = {
     {
       name: "age",
       label: "Age",
-      type: "number",
+      type: "integer",
       description: "Age of the patient",
       required: true,
     },

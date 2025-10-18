@@ -6,6 +6,7 @@ import {
   openIDmDocWorkFlow,
 } from "./openid";
 import dotenv from "dotenv";
+import { privadoJsonLdWorkFlow } from "./privado";
 
 dotenv.config();
 export const config = {
@@ -28,10 +29,14 @@ async function main() {
 
   // Indicio Work flow
   // const indicio = await indicioJsonLdWorkFlow();
-  const indicio = await indicioAnoncredWorkFlow();
+  // const indicio = await indicioAnoncredWorkFlow();
+
   // Cheqd Work Flow
   // const cheqd = await cheqdAnoncredWorkFlow();
   // const cheqd = await cheqdJsonLdWorkFlow();
+
+  // Privado Work Flow
+  const privado = await privadoJsonLdWorkFlow();
 }
 
 main();
