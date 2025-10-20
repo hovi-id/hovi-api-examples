@@ -60,7 +60,7 @@ export async function indicioJsonLdWorkFlow() {
         createCredentialTemplateResponse.response.credentialTemplateId,
       connectionId: connectionResponse.connectionId,
       credentialValues: {
-        age: 40,
+        age: 45,
       },
       holderDid: tenantResponse.response.dids[0].did,
     },

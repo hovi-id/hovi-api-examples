@@ -94,7 +94,7 @@ export const openidMdocVerificationTemplate = {
   ],
 };
 
-export const jsonLdCredentialTemplate = {
+export const jsonLdCredentialTemplatePrivadoId = {
   name: faker.word.noun() + " ID",
   version: "1.0.1",
   description: faker.lorem.sentence(),
@@ -108,8 +108,38 @@ export const jsonLdCredentialTemplate = {
     },
   ],
   schemaType: faker.word.noun(),
+  privadoCredentialType: "jsonld-sig",
+};
+export const jsonLdCredentialTemplate = {
+  name: faker.word.noun() + " ID",
+  version: "1.0.1",
+  description: faker.lorem.sentence(),
+  attributes: [
+    {
+      name: "age",
+      label: "Age",
+      type: "number",
+      description: "Age of the patient",
+      required: true,
+    },
+  ],
+  schemaType: faker.word.noun(),
 };
 
+export const jsonLdVerificationTemplatePrivadoId = {
+  name: faker.word.noun() + " ID",
+  version: "1.0.1",
+  description: faker.lorem.sentence(),
+  requestedAttributes: [
+    {
+      name: "age",
+      label: "Age",
+      type: "integer",
+      description: "Age of the patient",
+      required: true,
+    },
+  ],
+};
 export const jsonLdVerificationTemplate = {
   name: faker.word.noun() + " ID",
   version: "1.0.1",

@@ -86,7 +86,7 @@ export const checkConnectionStatus = async (
         }
 
         // const endpoint = `${config.base_url}/connection/find?invitationId=${invitationId}`;
-        const endpoint = `${config.base_url}/connection/invitation/find?invitationId=${invitationId}`;
+        const endpoint = `${config.base_url}/connection/find?invitationId=${invitationId}`;
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
@@ -102,7 +102,10 @@ export const checkConnectionStatus = async (
         const data = await response.json();
         console.log("data", data);
         // Check if state matches
-        if (data.response[0]?.state === "completed") {
+        if (
+          data.response.length > 0 &&
+          data.response[0].state === "completed"
+        ) {
           clearInterval(interval);
           resolve(data);
         }

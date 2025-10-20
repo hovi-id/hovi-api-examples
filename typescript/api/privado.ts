@@ -1,4 +1,9 @@
-import { jsonLdCredentialTemplate, jsonLdVerificationTemplate } from "./faker";
+import { faker } from "@faker-js/faker";
+import {
+  jsonLdCredentialTemplate,
+  jsonLdCredentialTemplatePrivadoId,
+  jsonLdVerificationTemplate,
+} from "./faker";
 import { createConnection } from "./privado/connection";
 import { createCredentialOffer } from "./privado/issue";
 import { sendProofRequest } from "./privado/verify";
@@ -19,7 +24,7 @@ export async function privadoJsonLdWorkFlow() {
   // Step 2: Create a new credential template
   const createCredentialTemplateResponse = await createCredentialTemplate(
     tenantResponse.response.tenantId,
-    { ...jsonLdCredentialTemplate, privadoCredentialType: "jsonld-sig" },
+    jsonLdCredentialTemplatePrivadoId,
     "jsonld"
   );
 
@@ -48,11 +53,23 @@ export async function privadoJsonLdWorkFlow() {
   const createVerificationTemplateResponse = await createVerificationTemplate(
     tenantResponse.response.tenantId,
     {
-      ...jsonLdVerificationTemplate,
+      name: faker.word.noun() + " ID",
+      version: "1.0.1",
+      description: faker.lorem.sentence(),
       restrictions: {
         credentialTemplateId:
           createCredentialTemplateResponse.response.credentialTemplateId,
       },
+      conditions: [
+        {
+          allowedIssuers: ["*"],
+          credentialSubject: {
+            age: {
+              $eq: 40,
+            },
+          },
+        },
+      ],
     },
     "jsonld"
   );

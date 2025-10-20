@@ -24,7 +24,15 @@ export async function createCredentialTemplate(
   // Validate payload based on format
 
   const endpoint = `${config.base_url}/credential-template/${format}/create`;
-  // console.log("Payload:", payload);
+  console.log(endpoint, {
+    method: "POST",
+    headers: {
+      "x-tenant-id": tenantId,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.api_key}`,
+    },
+    body: JSON.stringify(payload),
+  });
   try {
     const resp = await fetch(endpoint, {
       method: "POST",

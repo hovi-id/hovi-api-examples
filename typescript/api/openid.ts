@@ -7,6 +7,8 @@ import {
 } from "./utils/templates";
 import { createTenant } from "./utils/tenant";
 import {
+  jsonLdCredentialTemplate,
+  jsonLdVerificationTemplate,
   openidMdocCredentialTemplate,
   openidMdocVerificationTemplate,
   openidSdJwtCredentialTemplate,
@@ -82,7 +84,7 @@ export async function openIdJsonLdWorkFlow() {
   // Step 2: Create a new credential template
   const createCredentialTemplateResponse = await createCredentialTemplate(
     tenantResponse.response.tenantId,
-    openidSdJwtCredentialTemplate,
+    jsonLdCredentialTemplate,
     "jsonld"
   );
   // Step 3: Create a new credential offer
@@ -101,7 +103,7 @@ export async function openIdJsonLdWorkFlow() {
   const createVerificationTemplateResponse = await createVerificationTemplate(
     tenantResponse.response.tenantId,
     {
-      ...openidSdJwtVerificationTemplate,
+      ...jsonLdVerificationTemplate,
       restrictions: {
         credentialTemplateId:
           createCredentialTemplateResponse.response.credentialTemplateId,
