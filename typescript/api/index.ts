@@ -4,9 +4,9 @@ import {
   openIdJsonLdWorkFlow,
   openIdSdJwtWorkFlow,
   openIDmDocWorkFlow,
-} from "./openid";
+} from "./open-id";
 import dotenv from "dotenv";
-import { privadoJsonLdWorkFlow } from "./privado";
+import { privadoJsonLdWorkFlow } from "./privado-id";
 
 dotenv.config();
 export const config = {
@@ -23,7 +23,7 @@ export const config = {
  */
 async function main() {
   // OpenId Work Flow
-  // const openId = await openIdJsonLdWorkFlow();
+  const openId = await openIdJsonLdWorkFlow();
   // const openId = await openIdSdJwtWorkFlow();
   // const openId = await openIDmDocWorkFlow();
 
@@ -36,7 +36,7 @@ async function main() {
   // const cheqd = await cheqdJsonLdWorkFlow();
 
   // Privado Work Flow
-  const privado = await privadoJsonLdWorkFlow();
+  // const privado = await privadoJsonLdWorkFlow();
 }
 
 main();

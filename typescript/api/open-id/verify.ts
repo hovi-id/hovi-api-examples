@@ -11,8 +11,7 @@ import qrcode from "qrcode-terminal";
  */
 export const sendProofRequest = async (
   tenantId: string,
-  verificationTemplateId: string,
-  connectionId?: string
+  verificationTemplateId: string
 ) => {
   const endpoint = `${config.base_url}/verification/send-proof-request`;
   const payload = {
