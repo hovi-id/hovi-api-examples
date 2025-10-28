@@ -1,6 +1,5 @@
 import chalk from "chalk";
-import { config } from "..";
-import { TCredentialFormat, CredentialFormatMap } from "../types";
+import { config, TCredentialFormat } from "..";
 import { faker } from "@faker-js/faker";
 
 /**
@@ -24,15 +23,7 @@ export async function createCredentialTemplate(
   // Validate payload based on format
 
   const endpoint = `${config.base_url}/credential-template/${format}/create`;
-  console.log(endpoint, {
-    method: "POST",
-    headers: {
-      "x-tenant-id": tenantId,
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.api_key}`,
-    },
-    body: JSON.stringify(payload),
-  });
+
   try {
     const resp = await fetch(endpoint, {
       method: "POST",
@@ -44,10 +35,12 @@ export async function createCredentialTemplate(
       body: JSON.stringify(payload),
     });
 
-    if (!resp.ok) {
-      throw new Error(`HTTP error: ${resp.status}`);
-    }
     const data = await resp.json();
+    if (!data.success) {
+      throw new Error(
+        `HTTP error! Status: ${resp.status}, Message: ${data.message}`
+      );
+    }
     console.log("✅ Credential template created successfully:");
     return data;
   } catch (err: any) {
@@ -73,7 +66,6 @@ export const createVerificationTemplate = async (
   format: TCredentialFormat
 ) => {
   const endpoint = `${config.base_url}/verification-template/${format}/create`;
-  console.log("Payload:", payload);
   try {
     const response = await fetch(endpoint, {
       method: "POST",

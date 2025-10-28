@@ -29,7 +29,6 @@ export const sendProofRequest = async (
     verificationTemplateId: verificationTemplateId,
     connectionId,
   };
-  console.log({ endpoint, payload });
   try {
     const response = await fetch(endpoint, {
       method: "POST",

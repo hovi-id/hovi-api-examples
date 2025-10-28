@@ -1,156 +1,105 @@
 import { faker } from "@faker-js/faker";
 
-export const anoncredCredentialTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  attributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "string",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-  // tag: faker.word.noun().toString(),
-  tag: "patient",
-};
+export function createCredentialTemplate(attrType: any, extra = {}) {
+  return {
+    name: faker.word.noun() + " ID",
+    version: "1.0.1",
+    description: faker.lorem.sentence(),
+    attributes: [
+      {
+        name: "age",
+        label: "Age",
+        type: attrType,
+        description: "Age of the patient",
+        required: true,
+      },
+    ],
+    ...extra,
+  };
+}
 
-export const anoncredVerificationTemplate = {
-  description: "Verify patient age",
-  name: "Patient Age Verification",
-  version: "1.0.1",
-  requestedAttributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "string",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-};
-
-export const openidSdJwtCredentialTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  attributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "number",
-      description: "Age of the patient",
-      required: true,
-      disclosurable: false,
-    },
-  ],
-  schemaType: faker.word.noun(),
-};
-
-export const openidSdJwtVerificationTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  requestedAttributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "number",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-};
-export const openidMdocCredentialTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  attributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "number",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-  docType: faker.word.noun(),
-};
-
-export const openidMdocVerificationTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  requestedAttributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "number",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-};
-
-export const jsonLdCredentialTemplatePrivadoId = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  attributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "integer",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-  schemaType: faker.word.noun(),
-  privadoCredentialType: "jsonld-sig",
-};
-export const jsonLdCredentialTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  attributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "number",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-  schemaType: faker.word.noun(),
-};
+export function createVerificationTemplate(attrType: any, extra = {}) {
+  return {
+    name: faker.word.noun() + " Verification",
+    version: "1.0.1",
+    description: faker.lorem.sentence(),
+    requestedAttributes: [
+      {
+        name: "age",
+        label: "Age",
+        type: attrType,
+        description: "Age of the patient",
+        required: true,
+      },
+    ],
+    ...extra,
+  };
+}
 
 export const jsonLdVerificationTemplatePrivadoId = {
-  name: faker.word.noun() + " ID",
+  name: faker.word.noun() + " Verification",
   version: "1.0.1",
   description: faker.lorem.sentence(),
-  requestedAttributes: [
+  conditions: [
     {
-      name: "age",
-      label: "Age",
-      type: "integer",
-      description: "Age of the patient",
-      required: true,
+      allowedIssuers: ["*"],
+      credentialSubject: {
+        age: {
+          $eq: 40,
+        },
+      },
     },
   ],
 };
-export const jsonLdVerificationTemplate = {
-  name: faker.word.noun() + " ID",
-  version: "1.0.1",
-  description: faker.lorem.sentence(),
-  requestedAttributes: [
-    {
-      name: "age",
-      label: "Age",
-      type: "number",
-      description: "Age of the patient",
-      required: true,
-    },
-  ],
-};
+
+export const anoncredCredentialTemplate = createCredentialTemplate("string", {
+  tag: "patient",
+});
+
+export const anoncredVerificationTemplate = createVerificationTemplate(
+  "string",
+  {
+    description: "Verify patient age",
+  }
+);
+
+export const openidSdJwtCredentialTemplate = createCredentialTemplate(
+  "number",
+  {
+    schemaType: faker.word.noun(),
+    attributes: [
+      {
+        name: "age",
+        label: "Age",
+        type: "number",
+        description: "Age of the patient",
+        required: true,
+        disclosurable: false,
+      },
+    ],
+  }
+);
+
+export const openidSdJwtVerificationTemplate =
+  createVerificationTemplate("number");
+
+export const openidMdocCredentialTemplate = createCredentialTemplate("number", {
+  docType: faker.word.noun(),
+});
+
+export const openidMdocVerificationTemplate =
+  createVerificationTemplate("number");
+
+export const jsonLdCredentialTemplate = createCredentialTemplate("number", {
+  schemaType: faker.word.noun(),
+});
+
+export const jsonLdVerificationTemplate = createVerificationTemplate("number");
+
+export const jsonLdCredentialTemplatePrivadoId = createCredentialTemplate(
+  "integer",
+  {
+    schemaType: faker.word.noun(),
+    privadoCredentialType: "jsonld-sig",
+  }
+);

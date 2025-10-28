@@ -13,6 +13,7 @@ export const config = {
   base_url: process.env.BASE_URL,
   api_key: process.env.API_KEY,
 };
+export type TCredentialFormat = "mdoc" | "sd-jwt" | "jsonld" | "anoncred";
 
 /**
  * The main entry point for executing authentication workflows.
@@ -23,7 +24,7 @@ export const config = {
  */
 async function main() {
   // OpenId Work Flow
-  const openId = await openIdJsonLdWorkFlow();
+  // const openId = await openIdJsonLdWorkFlow();
   // const openId = await openIdSdJwtWorkFlow();
   // const openId = await openIDmDocWorkFlow();
 

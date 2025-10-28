@@ -1,8 +1,5 @@
 import chalk from "chalk";
-import { TCredentialFormat, TCredentialTemplateOfferPayload } from "../types";
-import logger from "../utils/logger";
-import qrcode from "qrcode-terminal";
-import { config } from "..";
+import { config, TCredentialFormat } from "..";
 
 /**
  * Creates a credential offer by sending a POST request to the specified endpoint.
@@ -22,7 +19,6 @@ export async function createCredentialOffer(
   format: TCredentialFormat
 ) {
   const endpoint = `${config.base_url}/credential/${format}/offer`;
-  console.log("payload", payload);
   try {
     const response = await fetch(endpoint, {
       method: "POST",

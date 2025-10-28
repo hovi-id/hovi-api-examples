@@ -18,7 +18,6 @@ export const sendProofRequest = async (
     verificationTemplateId: verificationTemplateId,
     // connectionId: "sample-connection-id", // Replace with actual connection ID
   };
-  console.log({ endpoint, payload });
   try {
     const response = await fetch(endpoint, {
       method: "POST",

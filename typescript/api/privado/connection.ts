@@ -17,15 +17,6 @@ export async function createConnection(tenantId: string, label: string) {
   const endpoint = `${config.base_url}/connection/create`;
 
   const payload = { label: label || "Your Connection label" };
-  console.log(endpoint, {
-    method: "POST",
-    headers: {
-      "x-tenant-id": tenantId,
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.api_key}`,
-    },
-    body: JSON.stringify(payload),
-  });
   try {
     const response = await fetch(endpoint, {
       method: "POST",
@@ -85,7 +76,6 @@ export const checkConnectionStatus = async (
           reject(new Error("Connection status check timed out"));
         }
 
-        // const endpoint = `${config.base_url}/connection/find?invitationId=${invitationId}`;
         const endpoint = `${config.base_url}/connection/find?invitationId=${invitationId}`;
         const response = await fetch(endpoint, {
           method: "GET",
@@ -100,7 +90,6 @@ export const checkConnectionStatus = async (
         }
 
         const data = await response.json();
-        console.log("data", data);
         // Check if state matches
         if (
           data.response.length > 0 &&

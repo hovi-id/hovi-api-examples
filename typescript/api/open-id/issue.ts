@@ -1,8 +1,6 @@
 import chalk from "chalk";
-import { TCredentialFormat, TCredentialTemplateOfferPayload } from "../types";
-import logger from "../utils/logger";
 import qrcode from "qrcode-terminal";
-import { config } from "..";
+import { config, TCredentialFormat } from "..";
 
 /**
  * Creates a credential offer for a given tenant by sending a POST request to the credential offer endpoint.

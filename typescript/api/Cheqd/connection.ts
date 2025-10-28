@@ -77,8 +77,8 @@ export const checkConnectionStatus = async (
           reject(new Error("Connection status check timed out"));
         }
 
-        // const endpoint = `${config.base_url}/connection/find?invitationId=${invitationId}`;
-        const endpoint = `${config.base_url}/connection`;
+        const endpoint = `${config.base_url}/connection/find?invitationId=${invitationId}`;
+        // const endpoint = `${config.base_url}/connection`;
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
