@@ -27,7 +27,7 @@ async function main() {
   // This workflow does not require a wallet connection to be established
   // and is good for initial testing.
   // ----------------------------------------------------------------------
-  // await openIdSdJwtWorkFlow();
+  await openIdSdJwtWorkFlow();
   // await openIdJsonLdWorkFlow();
   // await openIDmDocWorkFlow();
 
@@ -47,7 +47,7 @@ async function main() {
   Cheqd Work Flow
   */
   // await cheqdJsonLdWorkFlow();
-  await cheqdAnoncredWorkFlow();
+  // await cheqdAnoncredWorkFlow();
 
   /*
   Privado Work Flow
