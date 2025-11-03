@@ -1,138 +1,130 @@
+// FILE: typescript/api/indicio.ts (MODIFIED)
+
 import { createConnection } from "./indicio/connection";
 import {
-  createCredentialTemplate,
-  createVerificationTemplate,
-} from "./utils/templates";
+  createCredentialTemplateAnoncred,
+  createCredentialTemplateJsonLd,
+  createVerificationTemplateAnoncred,
+  createVerificationTemplateJsonLd,
+} from "./utils/templates"; // Import from centralized location
 import { createTenant } from "./utils/tenant";
-import { createCredentialOffer } from "./indicio/issue";
-import { sendProofRequest } from "./indicio/verify";
+import {
+  offerCredentialAnoncred,
+  offerCredentialJsonLd,
+} from "./indicio/issue"; // Import refactored functions
+import { sendProofRequest } from "./indicio/verify"; // Import from original location
 import {
   anoncredCredentialTemplate,
   anoncredVerificationTemplate,
   jsonLdCredentialTemplate,
   jsonLdVerificationTemplate,
 } from "./faker";
+import chalk from "chalk";
 
-/**
- * Executes a workflow for interacting with the indicio API, including tenant creation,
- * credential template creation, connection establishment, credential offering, verification
- * template creation, and proof request sending.
- *
- * The workflow consists of the following steps:
- * 1. Creates a new tenant with specified details.
- * 2. Creates a new credential template for the tenant.
- * 3. Establishes a new connection for the tenant.
- * 4. Issues a credential offer using the created template and connection.
- * 5. Creates a verification template for proof requests.
- * 6. Sends a proof request using the verification template and connection.
- *
- * @returns {Promise<void>} A promise that resolves when the workflow is complete.
- *
- * @example
- * await indicioWorkFlow();
- */
 export async function indicioJsonLdWorkFlow() {
+  console.log(chalk.blue.bold("\n--- Starting INDICIO JSON-LD Workflow ---"));
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
-    tenantName: "YourTenantName", // Replace with your tenant's name
-    tenantLabel: "YourTenantLabel", // Replace with a descriptive label
-    tenantSecret: "YourTenantSecret", // Replace with a secure secret key
-    imageUrl: "https://yourdomain.com/logo.png", // Replace with your logo URL
+    tenantName: "IndicioJsonLdTenant",
+    tenantLabel: "Indicio JSON-LD",
+    tenantSecret: "secret-3",
+    imageUrl: "https://yourdomain.com/logo.png",
   });
+  const tenantId = tenantResponse.response.tenantId;
+
   // Step 2: Create a new credential template
-  const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantResponse.response.tenantId,
-    jsonLdCredentialTemplate,
-    "jsonld"
+  const createCredentialTemplateResponse = await createCredentialTemplateJsonLd(
+    tenantId,
+    jsonLdCredentialTemplate
   );
+  const credentialTemplateId =
+    createCredentialTemplateResponse.response.credentialTemplateId;
 
   // Step 3: Create a new connection
   const connectionResponse = await createConnection(
-    tenantResponse.response.tenantId,
+    tenantId,
     "Your Connection Name"
   );
 
   // Step 4: Create a new credential offer
-  const offerCredential = await createCredentialOffer(
-    tenantResponse.response.tenantId,
-    {
-      credentialTemplateId:
-        createCredentialTemplateResponse.response.credentialTemplateId,
-      connectionId: connectionResponse.connectionId,
-      credentialValues: {
-        age: 45,
-      },
-      holderDid: tenantResponse.response.dids[0].did,
+  await offerCredentialJsonLd(tenantId, {
+    credentialTemplateId: credentialTemplateId,
+    connectionId: connectionResponse.connectionId,
+    credentialValues: {
+      age: 45,
     },
-    "jsonld"
-  );
+    holderDid: tenantResponse.response.dids[0].did,
+  });
 
-  // Step 4: Create a new verification template
-  const createVerificationTemplateResponse = await createVerificationTemplate(
-    tenantResponse.response.tenantId,
-    {
+  // Step 5: Create a new verification template
+  const createVerificationTemplateResponse =
+    await createVerificationTemplateJsonLd(tenantId, {
       ...jsonLdVerificationTemplate,
       restrictions: {
-        credentialTemplateId:
-          createCredentialTemplateResponse.response.credentialTemplateId,
+        credentialTemplateId: credentialTemplateId,
       },
-    },
-    "jsonld"
-  );
+    });
+  const verificationTemplateId =
+    createVerificationTemplateResponse.response.verificationTemplateId;
 
-  // Step 5: Send a proof request
-  const sentProofRequest = await sendProofRequest(
-    tenantResponse.response.tenantId,
-    createVerificationTemplateResponse.response.verificationTemplateId,
+  // Step 6: Send a proof request
+  await sendProofRequest(
+    tenantId,
+    verificationTemplateId,
     connectionResponse.connectionId
   );
+  console.log(chalk.blue.bold("--- INDICIO JSON-LD Workflow Complete ---"));
 }
+
 export async function indicioAnoncredWorkFlow() {
+  console.log(chalk.blue.bold("\n--- Starting INDICIO Anoncred Workflow ---"));
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
-    tenantName: "YourTenantName", // Replace with your tenant's name
-    tenantLabel: "YourTenantLabel", // Replace with a descriptive label
-    tenantSecret: "YourTenantSecret", // Replace with a secure secret key
-    imageUrl: "https://yourdomain.com/logo.png", // Replace with your logo URL
+    tenantName: "IndicioAnoncredTenant",
+    tenantLabel: "Indicio Anoncred",
+    tenantSecret: "secret-4",
+    imageUrl: "https://yourdomain.com/logo.png",
   });
+  const tenantId = tenantResponse.response.tenantId;
+
   // Step 2: Create a new credential template
-  const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantResponse.response.tenantId,
-    anoncredCredentialTemplate,
-    "anoncred"
-  );
+  const createCredentialTemplateResponse =
+    await createCredentialTemplateAnoncred(
+      tenantId,
+      anoncredCredentialTemplate
+    );
+  const credentialTemplateId =
+    createCredentialTemplateResponse.response.credentialTemplateId;
 
   // Step 3: Create a new connection
   const connectionResponse = await createConnection(
-    tenantResponse.response.tenantId,
+    tenantId,
     "Your Connection Name"
   );
 
   // Step 4: Create a new credential offer
-  const offerCredential = await createCredentialOffer(
-    tenantResponse.response.tenantId,
-    {
-      credentialTemplateId:
-        createCredentialTemplateResponse.response.credentialTemplateId,
-      connectionId: connectionResponse.connectionId,
-      credentialValues: {
-        age: "40",
-      },
+  await offerCredentialAnoncred(tenantId, {
+    credentialTemplateId: credentialTemplateId,
+    connectionId: connectionResponse.connectionId,
+    credentialValues: {
+      age: "40",
     },
-    "anoncred"
-  );
+  });
 
-  // Step 4: Create a new verification template
-  const createVerificationTemplateResponse = await createVerificationTemplate(
-    tenantResponse.response.tenantId,
-    anoncredVerificationTemplate,
-    "anoncred"
-  );
+  // Step 5: Create a new verification template
+  const createVerificationTemplateResponse =
+    await createVerificationTemplateAnoncred(
+      tenantId,
+      anoncredVerificationTemplate
+    );
+  const verificationTemplateId =
+    createVerificationTemplateResponse.response.verificationTemplateId;
 
-  // Step 5: Send a proof request
-  const sentProofRequest = await sendProofRequest(
-    tenantResponse.response.tenantId,
-    createVerificationTemplateResponse.response.verificationTemplateId,
+  // Step 6: Send a proof request
+  await sendProofRequest(
+    tenantId,
+    verificationTemplateId,
     connectionResponse.connectionId
   );
+  console.log(chalk.blue.bold("--- INDICIO Anoncred Workflow Complete ---"));
 }

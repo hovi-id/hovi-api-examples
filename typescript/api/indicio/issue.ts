@@ -1,22 +1,17 @@
 import chalk from "chalk";
-import { config, TCredentialFormat } from "..";
+import { config } from "..";
 
 /**
- * Creates a credential offer by sending a POST request to the specified endpoint.
- *
- * @param tenantId - The unique identifier for the tenant, used for authentication.
- * @param payload - The payload containing the credential offer details to be sent in the request body.
- * @returns A promise that resolves to the response data from the API if successful, or an error object if the request fails.
- *
- * @example
- * ```typescript
- * const offer = await createCredentialOffer('tenant123', { credentialData: { ... } });
- * ```
+ * Helper function to post a credential offer.
+ * @param tenantId - The tenant's unique identifier.
+ * @param payload - The offer payload.
+ * @param format - The credential format (jsonld, anoncred).
+ * @returns The API response.
  */
-export async function createCredentialOffer(
+async function postCredentialOffer(
   tenantId: string,
   payload: any,
-  format: TCredentialFormat
+  format: string
 ) {
   const endpoint = `${config.base_url}/credential/${format}/offer`;
   try {
@@ -32,20 +27,27 @@ export async function createCredentialOffer(
 
     const data = await response.json();
     if (!data.success) {
-      console.error(`Error creating credential offer:`, data.message);
-      return { success: false, message: data.message };
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Message: ${data.message}`
+      );
     }
     console.log(
       chalk.bold.green(
-        `\n📱 An ${format} Credential Offer Sent To Your Wallet Successfully!`
+        `\n📱 An ${format.toUpperCase()} Credential Offer Sent To Your Wallet Successfully!`
       )
     );
-    // console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));
-
     console.log(chalk.gray("\n-------------------------------------------\n"));
     return data;
   } catch (error: any) {
-    console.error(`Error creating credential offer:`, error.message);
-    return { success: false, message: error.message };
+    console.error(`Error creating ${format} credential offer:`, error.message);
+    throw error; // Re-throw error to stop workflow
   }
+}
+
+export async function offerCredentialJsonLd(tenantId: string, payload: any) {
+  return postCredentialOffer(tenantId, payload, "jsonld");
+}
+
+export async function offerCredentialAnoncred(tenantId: string, payload: any) {
+  return postCredentialOffer(tenantId, payload, "anoncred");
 }

@@ -1,22 +1,18 @@
 import chalk from "chalk";
 import qrcode from "qrcode-terminal";
-import { config, TCredentialFormat } from "..";
+import { config } from "..";
 
 /**
- * Creates a credential offer for a given tenant by sending a POST request to the credential offer endpoint.
- *
- * @param tenantId - The unique identifier of the tenant for whom the credential offer is being created.
- * @param payload - The payload containing the credential offer details to be sent in the request body.
- * @returns A promise that resolves to the response data if the offer is created successfully, or an error object if the operation fails.
- *
- * @remarks
- * - Logs success and displays a QR code for the credential offer URI upon successful creation.
- * - Handles and logs errors, returning a standardized error object on failure.
+ * Helper function to post an OpenID credential offer and display a QR code.
+ * @param tenantId - The tenant's unique identifier.
+ * @param payload - The offer payload.
+ * @param format - The credential format (jsonld, sd-jwt, mdoc).
+ * @returns The API response.
  */
-export async function createCredentialOffer(
+async function postOpenIdCredentialOffer(
   tenantId: string,
   payload: any,
-  format: TCredentialFormat
+  format: string
 ) {
   const endpoint = `${config.base_url}/credential/${format}/offer`;
 
@@ -38,7 +34,7 @@ export async function createCredentialOffer(
     const data = await response.json();
     console.log(
       chalk.bold.green(
-        `\n✅ Credential Offer for ${format} Created Successfully!`
+        `\n✅ Credential Offer for ${format.toUpperCase()} Created Successfully!`
       )
     );
     console.log(chalk.magentaBright("\n📱 Scan this QR code:\n"));
@@ -47,7 +43,19 @@ export async function createCredentialOffer(
     console.log(chalk.gray("\n-------------------------------------------\n"));
     return data;
   } catch (error: any) {
-    console.error(`Error creating credential offer:`, error.message);
-    return { success: false, message: error.message };
+    console.error(`Error creating ${format} credential offer:`, error.message);
+    throw error; // Re-throw error to stop workflow
   }
+}
+
+export async function offerCredentialJsonLd(tenantId: string, payload: any) {
+  return postOpenIdCredentialOffer(tenantId, payload, "jsonld");
+}
+
+export async function offerCredentialSdJwt(tenantId: string, payload: any) {
+  return postOpenIdCredentialOffer(tenantId, payload, "sd-jwt");
+}
+
+export async function offerCredentialMdoc(tenantId: string, payload: any) {
+  return postOpenIdCredentialOffer(tenantId, payload, "mdoc");
 }

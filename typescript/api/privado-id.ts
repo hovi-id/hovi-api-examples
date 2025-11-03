@@ -1,64 +1,60 @@
+// FILE: typescript/api/privado-id.ts (MODIFIED)
+
 import { faker } from "@faker-js/faker";
-import {
-  jsonLdCredentialTemplate,
-  jsonLdCredentialTemplatePrivadoId,
-  jsonLdVerificationTemplate,
-} from "./faker";
+import { jsonLdCredentialTemplatePrivadoId } from "./faker";
 import { createConnection } from "./privado/connection";
-import { createCredentialOffer } from "./privado/issue";
-import { sendProofRequest } from "./privado/verify";
+import { offerCredentialJsonLd } from "./privado/issue"; // Import refactored function
+import { sendProofRequest } from "./privado/verify"; // Import from original location
 import {
-  createCredentialTemplate,
-  createVerificationTemplate,
-} from "./utils/templates";
+  createCredentialTemplateJsonLd,
+  createVerificationTemplateJsonLd,
+} from "./utils/templates"; // Import from centralized location
 import { createTenant } from "./utils/tenant";
+import chalk from "chalk";
 
 export async function privadoJsonLdWorkFlow() {
+  console.log(chalk.blue.bold("\n--- Starting PrivadoID JSON-LD Workflow ---"));
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
-    tenantName: "YourTenantName", // Replace with your tenant's name
-    tenantLabel: "YourTenantLabel", // Replace with a descriptive label
-    tenantSecret: "YourTenantSecret", // Replace with a secure secret key
-    imageUrl: "https://yourdomain.com/logo.png", // Replace with your logo URL
+    tenantName: "PrivadoJsonLdTenant",
+    tenantLabel: "Privado JSON-LD",
+    tenantSecret: "secret-8",
+    imageUrl: "https://yourdomain.com/logo.png",
   });
+  const tenantId = tenantResponse.response.tenantId;
+
   // Step 2: Create a new credential template
-  const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantResponse.response.tenantId,
-    jsonLdCredentialTemplatePrivadoId,
-    "jsonld"
+  const createCredentialTemplateResponse = await createCredentialTemplateJsonLd(
+    tenantId,
+    jsonLdCredentialTemplatePrivadoId
   );
+  const credentialTemplateId =
+    createCredentialTemplateResponse.response.credentialTemplateId;
 
   // Step 3: Create a new connection
   const connectionResponse = await createConnection(
-    tenantResponse.response.tenantId,
+    tenantId,
     "Your Connection Name"
   );
 
   // Step 4: Create a new credential offer
-  const offerCredential = await createCredentialOffer(
-    tenantResponse.response.tenantId,
-    {
-      credentialTemplateId:
-        createCredentialTemplateResponse.response.credentialTemplateId,
-      connectionId: connectionResponse.connectionId,
-      credentialValues: {
-        age: 40,
-      },
-      holderDid: tenantResponse.response.dids[0].did,
+  await offerCredentialJsonLd(tenantId, {
+    credentialTemplateId: credentialTemplateId,
+    connectionId: connectionResponse.connectionId,
+    credentialValues: {
+      age: 40,
     },
-    "jsonld"
-  );
+    holderDid: tenantResponse.response.dids[0].did,
+  });
 
-  // Step 4: Create a new verification template
-  const createVerificationTemplateResponse = await createVerificationTemplate(
-    tenantResponse.response.tenantId,
-    {
+  // Step 5: Create a new verification template
+  const createVerificationTemplateResponse =
+    await createVerificationTemplateJsonLd(tenantId, {
       name: faker.word.noun() + " ID",
       version: "1.0.1",
       description: faker.lorem.sentence(),
       restrictions: {
-        credentialTemplateId:
-          createCredentialTemplateResponse.response.credentialTemplateId,
+        credentialTemplateId: credentialTemplateId,
       },
       conditions: [
         {
@@ -70,14 +66,15 @@ export async function privadoJsonLdWorkFlow() {
           },
         },
       ],
-    },
-    "jsonld"
-  );
+    });
+  const verificationTemplateId =
+    createVerificationTemplateResponse.response.verificationTemplateId;
 
-  // Step 5: Send a proof request
-  const sentProofRequest = await sendProofRequest(
-    tenantResponse.response.tenantId,
-    createVerificationTemplateResponse.response.verificationTemplateId,
+  // Step 6: Send a proof request
+  await sendProofRequest(
+    tenantId,
+    verificationTemplateId,
     connectionResponse.connectionId
   );
+  console.log(chalk.blue.bold("--- PrivadoID JSON-LD Workflow Complete ---"));
 }

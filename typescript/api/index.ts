@@ -9,35 +9,56 @@ import dotenv from "dotenv";
 import { privadoJsonLdWorkFlow } from "./privado-id";
 
 dotenv.config();
+
 export const config = {
   base_url: process.env.BASE_URL,
   api_key: process.env.API_KEY,
 };
+
+// This type is no longer needed by the refactored functions,
+// but we can keep it for reference or future use.
 export type TCredentialFormat = "mdoc" | "sd-jwt" | "jsonld" | "anoncred";
 
-/**
- * The main entry point for executing authentication workflows.
- *
- * This function sequentially runs the OpenId workflow and, optionally, the Cheqd workflow.
- *
- * @returns {Promise<void>} A promise that resolves when all workflows have completed.
- */
 async function main() {
-  // OpenId Work Flow
-  // const openId = await openIdJsonLdWorkFlow();
-  // const openId = await openIdSdJwtWorkFlow();
-  // const openId = await openIDmDocWorkFlow();
+  console.log("Hovi API Examples Starting...\n");
 
-  // Indicio Work flow
-  // const indicio = await indicioJsonLdWorkFlow();
-  // const indicio = await indicioAnoncredWorkFlow();
+  // ----------------------------------------------------------------------
+  // 1. OpenID Work Flow (FULLY ENABLED EXAMPLE)
+  // This workflow does not require a wallet connection to be established
+  // and is good for initial testing.
+  // ----------------------------------------------------------------------
+  // await openIdSdJwtWorkFlow();
+  // await openIdJsonLdWorkFlow();
+  // await openIDmDocWorkFlow();
 
-  // Cheqd Work Flow
-  // const cheqd = await cheqdAnoncredWorkFlow();
-  // const cheqd = await cheqdJsonLdWorkFlow();
+  // ----------------------------------------------------------------------
+  // 2. Other Ecosystems (COMMENTED OUT FOR CLARITY)
+  // These workflows require a wallet to scan a connection QR code.
+  // Uncomment the desired block to run a specific ecosystem demonstration.
+  // ----------------------------------------------------------------------
 
-  // Privado Work Flow
-  // const privado = await privadoJsonLdWorkFlow();
+  /*
+  Indicio Work flow
+  */
+  //  await indicioAnoncredWorkFlow();
+  //  await indicioJsonLdWorkFlow();
+
+  /*
+  Cheqd Work Flow
+  */
+  // await cheqdJsonLdWorkFlow();
+  await cheqdAnoncredWorkFlow();
+
+  /*
+  Privado Work Flow
+  await privadoJsonLdWorkFlow();
+  */
 }
 
-main();
+main().catch((error) => {
+  console.error(
+    "\n❌ A fatal error occurred during the main execution:",
+    error.message
+  );
+  process.exit(1);
+});

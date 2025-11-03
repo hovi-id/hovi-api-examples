@@ -1,10 +1,20 @@
+// FILE: typescript/api/open-id.ts (MODIFIED)
+
 import { faker } from "@faker-js/faker";
-import { createCredentialOffer } from "./open-id/issue";
-import { sendProofRequest } from "./open-id/verify";
 import {
-  createCredentialTemplate,
-  createVerificationTemplate,
-} from "./utils/templates";
+  offerCredentialJsonLd,
+  offerCredentialMdoc,
+  offerCredentialSdJwt,
+} from "./open-id/issue"; // Import refactored functions
+import { sendProofRequest } from "./open-id/verify"; // Import from original location
+import {
+  createCredentialTemplateJsonLd,
+  createCredentialTemplateMdoc,
+  createCredentialTemplateSdJwt,
+  createVerificationTemplateJsonLd,
+  createVerificationTemplateMdoc,
+  createVerificationTemplateSdJwt,
+} from "./utils/templates"; // Import from centralized location
 import { createTenant } from "./utils/tenant";
 import {
   jsonLdCredentialTemplate,
@@ -14,151 +24,133 @@ import {
   openidSdJwtCredentialTemplate,
   openidSdJwtVerificationTemplate,
 } from "./faker";
+import chalk from "chalk";
 
-/**
- * Executes the OpenID workflow, which includes the following steps:
- * 1. Creates a new tenant with specified details.
- * 2. Creates a new credential template for the tenant.
- * 3. Issues a credential offer based on the created template.
- * 4. Creates a verification template with restrictions based on the credential template.
- * 5. Sends a proof request using the verification template.
- *
- * This function demonstrates the end-to-end process of tenant creation, credential issuance,
- * and verification using the OpenID API.
- *
- * @returns {Promise<void>} A promise that resolves when the workflow is complete.
- */
 export async function openIdSdJwtWorkFlow() {
+  console.log(chalk.blue.bold("\n--- Starting OpenID SD-JWT Workflow ---"));
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
-    tenantName: "YourTenantName", // Replace with your tenant's name
-    tenantLabel: "YourTenantLabel", // Replace with a descriptive label
-    tenantSecret: "YourTenantSecret", // Replace with a secure secret key
-    imageUrl: "https://yourdomain.com/logo.png", // Replace with your logo URL
+    tenantName: "OpenIdSdJwtTenant",
+    tenantLabel: "OpenID SD-JWT",
+    tenantSecret: "secret-5",
+    imageUrl: "https://yourdomain.com/logo.png",
   });
+  const tenantId = tenantResponse.response.tenantId;
+
   // Step 2: Create a new credential template
-  const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantResponse.response.tenantId,
-    openidSdJwtCredentialTemplate,
-    "sd-jwt"
+  const createCredentialTemplateResponse = await createCredentialTemplateSdJwt(
+    tenantId,
+    openidSdJwtCredentialTemplate
   );
+  const credentialTemplateId =
+    createCredentialTemplateResponse.response.credentialTemplateId;
+
   // Step 3: Create a new credential offer
-  const offerCredential = await createCredentialOffer(
-    tenantResponse.response.tenantId,
-    {
-      credentialTemplateId:
-        createCredentialTemplateResponse.response.credentialTemplateId,
-      credentialValues: {
-        age: faker.number.int({ min: 18, max: 65 }),
-      },
+  await offerCredentialSdJwt(tenantId, {
+    credentialTemplateId: credentialTemplateId,
+    credentialValues: {
+      age: faker.number.int({ min: 18, max: 65 }),
     },
-    "sd-jwt"
-  );
+  });
+
   // Step 4: Create a new verification template
-  const createVerificationTemplateResponse = await createVerificationTemplate(
-    tenantResponse.response.tenantId,
-    {
+  const createVerificationTemplateResponse =
+    await createVerificationTemplateSdJwt(tenantId, {
       ...openidSdJwtVerificationTemplate,
       restrictions: {
-        credentialTemplateId:
-          createCredentialTemplateResponse.response.credentialTemplateId,
+        credentialTemplateId: credentialTemplateId,
       },
-    },
-    "sd-jwt"
-  );
+    });
+  const verificationTemplateId =
+    createVerificationTemplateResponse.response.verificationTemplateId;
+
   // Step 5: Send a proof request
-  const sentProofRequest = await sendProofRequest(
-    tenantResponse.response.tenantId,
-    createVerificationTemplateResponse.response.verificationTemplateId
-  );
+  await sendProofRequest(tenantId, verificationTemplateId);
+  console.log(chalk.blue.bold("--- OpenID SD-JWT Workflow Complete ---"));
 }
 
 export async function openIdJsonLdWorkFlow() {
+  console.log(chalk.blue.bold("\n--- Starting OpenID JSON-LD Workflow ---"));
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
-    tenantName: "YourTenantName", // Replace with your tenant's name
-    tenantLabel: "YourTenantLabel", // Replace with a descriptive label
-    tenantSecret: "YourTenantSecret", // Replace with a secure secret key
-    imageUrl: "https://yourdomain.com/logo.png", // Replace with your logo URL
+    tenantName: "OpenIdJsonLdTenant",
+    tenantLabel: "OpenID JSON-LD",
+    tenantSecret: "secret-6",
+    imageUrl: "https://yourdomain.com/logo.png",
   });
+  const tenantId = tenantResponse.response.tenantId;
+
   // Step 2: Create a new credential template
-  const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantResponse.response.tenantId,
-    jsonLdCredentialTemplate,
-    "jsonld"
+  const createCredentialTemplateResponse = await createCredentialTemplateJsonLd(
+    tenantId,
+    jsonLdCredentialTemplate
   );
+  const credentialTemplateId =
+    createCredentialTemplateResponse.response.credentialTemplateId;
+
   // Step 3: Create a new credential offer
-  const offerCredential = await createCredentialOffer(
-    tenantResponse.response.tenantId,
-    {
-      credentialTemplateId:
-        createCredentialTemplateResponse.response.credentialTemplateId,
-      credentialValues: {
-        age: faker.number.int({ min: 18, max: 65 }),
-      },
+  await offerCredentialJsonLd(tenantId, {
+    credentialTemplateId: credentialTemplateId,
+    credentialValues: {
+      age: faker.number.int({ min: 18, max: 65 }),
     },
-    "jsonld"
-  );
+  });
+
   // Step 4: Create a new verification template
-  const createVerificationTemplateResponse = await createVerificationTemplate(
-    tenantResponse.response.tenantId,
-    {
+  const createVerificationTemplateResponse =
+    await createVerificationTemplateJsonLd(tenantId, {
       ...jsonLdVerificationTemplate,
       restrictions: {
-        credentialTemplateId:
-          createCredentialTemplateResponse.response.credentialTemplateId,
+        credentialTemplateId: credentialTemplateId,
       },
-    },
-    "jsonld"
-  );
+    });
+  const verificationTemplateId =
+    createVerificationTemplateResponse.response.verificationTemplateId;
+
   // Step 5: Send a proof request
-  const sentProofRequest = await sendProofRequest(
-    tenantResponse.response.tenantId,
-    createVerificationTemplateResponse.response.verificationTemplateId
-  );
+  await sendProofRequest(tenantId, verificationTemplateId);
+  console.log(chalk.blue.bold("--- OpenID JSON-LD Workflow Complete ---"));
 }
 
 export async function openIDmDocWorkFlow() {
+  console.log(chalk.blue.bold("\n--- Starting OpenID mDoc Workflow ---"));
   // Step 1: Create a new tenant
   const tenantResponse = await createTenant({
-    tenantName: "YourTenantName", // Replace with your tenant's name
-    tenantLabel: "YourTenantLabel", // Replace with a descriptive label
-    tenantSecret: "YourTenantSecret", // Replace with a secure secret key
-    imageUrl: "https://yourdomain.com/logo.png", // Replace with your logo URL
+    tenantName: "OpenIdMdocTenant",
+    tenantLabel: "OpenID mDoc",
+    tenantSecret: "secret-7",
+    imageUrl: "https://yourdomain.com/logo.png",
   });
+  const tenantId = tenantResponse.response.tenantId;
+
   // Step 2: Create a new credential template
-  const createCredentialTemplateResponse = await createCredentialTemplate(
-    tenantResponse.response.tenantId,
-    openidMdocCredentialTemplate,
-    "mdoc"
+  const createCredentialTemplateResponse = await createCredentialTemplateMdoc(
+    tenantId,
+    openidMdocCredentialTemplate
   );
+  const credentialTemplateId =
+    createCredentialTemplateResponse.response.credentialTemplateId;
+
   // Step 3: Create a new credential offer
-  const offerCredential = await createCredentialOffer(
-    tenantResponse.response.tenantId,
-    {
-      credentialTemplateId:
-        createCredentialTemplateResponse.response.credentialTemplateId,
-      credentialValues: {
-        age: faker.number.int({ min: 18, max: 65 }),
-      },
+  await offerCredentialMdoc(tenantId, {
+    credentialTemplateId: credentialTemplateId,
+    credentialValues: {
+      age: faker.number.int({ min: 18, max: 65 }),
     },
-    "mdoc"
-  );
+  });
+
   // Step 4: Create a new verification template
-  const createVerificationTemplateResponse = await createVerificationTemplate(
-    tenantResponse.response.tenantId,
-    {
+  const createVerificationTemplateResponse =
+    await createVerificationTemplateMdoc(tenantId, {
       ...openidMdocVerificationTemplate,
       restrictions: {
-        credentialTemplateId:
-          createCredentialTemplateResponse.response.credentialTemplateId,
+        credentialTemplateId: credentialTemplateId,
       },
-    },
-    "mdoc"
-  );
+    });
+  const verificationTemplateId =
+    createVerificationTemplateResponse.response.verificationTemplateId;
+
   // Step 5: Send a proof request
-  const sentProofRequest = await sendProofRequest(
-    tenantResponse.response.tenantId,
-    createVerificationTemplateResponse.response.verificationTemplateId
-  );
+  await sendProofRequest(tenantId, verificationTemplateId);
+  console.log(chalk.blue.bold("--- OpenID mDoc Workflow Complete ---"));
 }
