@@ -29,7 +29,7 @@ cp .env.example .env
 Edit the `.env` file and add your Hovi API key and base URL:
 
 ```
-BASE_URL=[https://api-dev.hovi.id](https://api-dev.hovi.id)
+BASE_URL=https://api.hovi.id
 API_KEY=<YOUR_ECOSYSTEM_API_KEY_HERE>
 ```
 
@@ -80,4 +80,5 @@ All workflow files (e.g., `cheqd.ts`, `open-id.ts`) are fully sequenced, running
 | **Indicio** | JSON-LD | `indicioJsonLdWorkFlow()` | Full flow, requires Connection scan. |
 | **Indicio** | Anoncred | `indicioAnoncredWorkFlow()` | Full flow, requires Connection scan. |
 | **PrivadoID**| JSON-LD | `privadoJsonLdWorkFlow()` | Full flow, requires Connection scan. |
+
 
